@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "859493804259",
+    "project_id": "accidenttracker-12d0f",
+    "storage_bucket": "accidenttracker-12d0f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859493804259:android:094a56e549d7b3df1b3dd6",
+        "android_client_info": {
+          "package_name": "com.accidenttracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDyTTZWxX3pCKjI_Xnu6Jud8HJhPJUhJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -25,7 +25,7 @@ export default function SplashScreen() {
         />
         
       </Animated.View>
-    </View>
+    /</View>
   );
 }
 
