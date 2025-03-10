@@ -15,45 +15,65 @@ import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 const RegisterScreen = ({ navigation }) => {
-  const [details, setDetails] = useState({ 
-    name: '', 
-    address: '', 
-    phone: '', 
-    aadhaar: '', 
-    license: '', 
-    vehicle: '' 
-  });
+  // State for form fields
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
+  const [aadhaar, setAadhaar] = useState('');
+  const [license, setLicense] = useState('');
+  const [vehicle, setVehicle] = useState('');
   
+  // State for validation errors
   const [errors, setErrors] = useState({});
 
+  // Form validation
   const validate = () => {
-    let tempErrors = {};
+    let isValid = true;
+    let newErrors = {};
     
-    if (!details.name) tempErrors.name = "Name is required";
-    if (!details.address) tempErrors.address = "Address is required";
-    
-    if (!details.phone) {
-      tempErrors.phone = "Phone number is required";
-    } else if (!/^\d{10}$/.test(details.phone)) {
-      tempErrors.phone = "Phone number must be 10 digits";
+    if (!name) {
+      newErrors.name = "Name is required";
+      isValid = false;
     }
     
-    if (!details.aadhaar) {
-      tempErrors.aadhaar = "Aadhaar number is required";
-    } else if (!/^\d{12}$/.test(details.aadhaar)) {
-      tempErrors.aadhaar = "Aadhaar must be 12 digits";
+    if (!address) {
+      newErrors.address = "Address is required";
+      isValid = false;
     }
     
-    if (!details.license) tempErrors.license = "License details are required";
-    if (!details.vehicle) tempErrors.vehicle = "Vehicle details are required";
+    if (!phone) {
+      newErrors.phone = "Phone number is required";
+      isValid = false;
+    } else if (!/^\d{10}$/.test(phone)) {
+      newErrors.phone = "Phone number must be 10 digits";
+      isValid = false;
+    }
     
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
+    if (!aadhaar) {
+      newErrors.aadhaar = "Aadhaar number is required";
+      isValid = false;
+    } else if (!/^\d{12}$/.test(aadhaar)) {
+      newErrors.aadhaar = "Aadhaar must be 12 digits";
+      isValid = false;
+    }
+    
+    if (!license) {
+      newErrors.license = "License details are required";
+      isValid = false;
+    }
+    
+    if (!vehicle) {
+      newErrors.vehicle = "Vehicle details are required";
+      isValid = false;
+    }
+    
+    setErrors(newErrors);
+    return isValid;
   };
 
+  // Handle registration submission
   const handleRegister = () => {
     if (validate()) {
-      // Registration logic would go here
       Alert.alert(
         "Registration Successful",
         "Your details have been submitted successfully!",
@@ -64,29 +84,11 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  const InputField = ({ icon, placeholder, value, onChangeText, keyboardType = "default", error }) => (
-    <View style={styles.inputContainer}>
-      <View style={styles.iconContainer}>
-        {icon}
-      </View>
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={styles.input}
-          placeholder={placeholder}
-          value={value}
-          onChangeText={onChangeText}
-          keyboardType={keyboardType}
-        />
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      </View>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingView}
+        style={{ flex: 1 }}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
@@ -96,66 +98,104 @@ const RegisterScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.formContainer}>
-            <InputField 
-              icon={<MaterialIcons name="person" size={24} color="#e53935" />}
-              placeholder="Full Name"
-              value={details.name}
-              onChangeText={(text) => setDetails({ ...details, name: text })}
-              error={errors.name}
-            />
+            {/* Name Input */}
+            <View style={styles.inputContainer}>
+              <MaterialIcons name="person" size={24} color="#e53935" style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Full Name"
+                  value={name}
+                  onChangeText={setName}
+                />
+                {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
+              </View>
+            </View>
             
-            <InputField 
-              icon={<MaterialIcons name="home" size={24} color="#e53935" />}
-              placeholder="Complete Address"
-              value={details.address}
-              onChangeText={(text) => setDetails({ ...details, address: text })}
-              error={errors.address}
-            />
+            {/* Address Input */}
+            <View style={styles.inputContainer}>
+              <MaterialIcons name="home" size={24} color="#e53935" style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Complete Address"
+                  value={address}
+                  onChangeText={setAddress}
+                />
+                {errors.address ? <Text style={styles.errorText}>{errors.address}</Text> : null}
+              </View>
+            </View>
             
-            <InputField 
-              icon={<MaterialIcons name="phone" size={24} color="#e53935" />}
-              placeholder="Phone Number"
-              value={details.phone}
-              onChangeText={(text) => setDetails({ ...details, phone: text })}
-              keyboardType="phone-pad"
-              error={errors.phone}
-            />
+            {/* Phone Input */}
+            <View style={styles.inputContainer}>
+              <MaterialIcons name="phone" size={24} color="#e53935" style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Phone Number"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
+                {errors.phone ? <Text style={styles.errorText}>{errors.phone}</Text> : null}
+              </View>
+            </View>
             
-            <InputField 
-              icon={<MaterialIcons name="credit-card" size={24} color="#e53935" />}
-              placeholder="Aadhaar Number"
-              value={details.aadhaar}
-              onChangeText={(text) => setDetails({ ...details, aadhaar: text })}
-              keyboardType="numeric"
-              error={errors.aadhaar}
-            />
+            {/* Aadhaar Input */}
+            <View style={styles.inputContainer}>
+              <MaterialIcons name="credit-card" size={24} color="#e53935" style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Aadhaar Number"
+                  value={aadhaar}
+                  onChangeText={setAadhaar}
+                  keyboardType="numeric"
+                />
+                {errors.aadhaar ? <Text style={styles.errorText}>{errors.aadhaar}</Text> : null}
+              </View>
+            </View>
             
-            <InputField 
-              icon={<MaterialIcons name="card-membership" size={24} color="#e53935" />}
-              placeholder="License Number"
-              value={details.license}
-              onChangeText={(text) => setDetails({ ...details, license: text })}
-              error={errors.license}
-            />
+            {/* License Input */}
+            <View style={styles.inputContainer}>
+              <MaterialIcons name="card-membership" size={24} color="#e53935" style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="License Number"
+                  value={license}
+                  onChangeText={setLicense}
+                />
+                {errors.license ? <Text style={styles.errorText}>{errors.license}</Text> : null}
+              </View>
+            </View>
             
-            <InputField 
-              icon={<MaterialIcons name="directions-car" size={24} color="#e53935" />}
-              placeholder="Vehicle Details (Model, Year, Color)"
-              value={details.vehicle}
-              onChangeText={(text) => setDetails({ ...details, vehicle: text })}
-              error={errors.vehicle}
-            />
+            {/* Vehicle Input */}
+            <View style={styles.inputContainer}>
+              <MaterialIcons name="directions-car" size={24} color="#e53935" style={styles.icon} />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Vehicle Details (Model, Year, Color)"
+                  value={vehicle}
+                  onChangeText={setVehicle}
+                />
+                {errors.vehicle ? <Text style={styles.errorText}>{errors.vehicle}</Text> : null}
+              </View>
+            </View>
 
+            {/* Register Button */}
             <TouchableOpacity style={styles.button} onPress={handleRegister}>
               <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
 
+            {/* Login Link */}
             <TouchableOpacity 
               onPress={() => router.push('/Driverlogin')} 
               style={styles.loginLink}
             >
               <Text style={styles.loginText}>
-                Already registered?   
+                Already registered?{' '}
                 <Text style={styles.loginTextBold}>Login</Text>
               </Text>
             </TouchableOpacity>
@@ -170,9 +210,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
-  },
-  keyboardAvoidingView: {
-    flex: 1,
   },
   header: {
     marginTop: 40,
@@ -201,9 +238,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 16,
   },
-  iconContainer: {
+  icon: {
     marginRight: 10,
-    paddingTop: 15,
+    marginTop: 15,
   },
   inputWrapper: {
     flex: 1,
@@ -229,11 +266,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: 'center',
     marginTop: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
   buttonText: {
     color: 'white',
