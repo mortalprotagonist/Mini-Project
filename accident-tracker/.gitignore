@@ -8,8 +8,8 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
-firebaseConfig.js
 
+.env
 # Native
 *.orig.*
 *.jks
