@@ -9,7 +9,7 @@ export default function MainScreen() {
   const userName = params.userName || 'User';
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -18,7 +18,7 @@ export default function MainScreen() {
         Alert.alert('Location Required', 'Please enable location services to use this app.');
         return;
       }
-      
+
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation.coords);
     })();
@@ -33,7 +33,7 @@ export default function MainScreen() {
         </View>
         <Text style={styles.welcomeText}>Welcome, {userName}!</Text>
       </View>
-      
+
       {/* Map */}
       <View style={styles.mapContainer}>
         <MapView
@@ -42,11 +42,11 @@ export default function MainScreen() {
           region={
             location
               ? {
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                  latitudeDelta: 0.01,
-                  longitudeDelta: 0.01,
-                }
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }
               : undefined
           }
         >
@@ -58,19 +58,25 @@ export default function MainScreen() {
           )}
         </MapView>
       </View>
-      
+
       {/* Action Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.infoButton}
           onPress={() => router.push('/guide')}
         >
           <Text style={styles.buttonText}>Safety Guide</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.emergencyButton}
-          onPress={() => router.push('/report')}
+          onPress={() => router.push({
+            pathname: '/report',
+            params: {
+              lat: location?.latitude,
+              lng: location?.longitude
+            }
+          })}
         >
           <Text style={styles.buttonText}>Report Emergency</Text>
         </TouchableOpacity>

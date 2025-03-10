@@ -5,22 +5,37 @@ import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function ReportScreen() {
+  const params = useLocalSearchParams();
   const [severity, setSeverity] = useState('Critical');
   const [casualties, setCasualties] = useState('1');
   const [accidentType, setAccidentType] = useState('Bus');
   const [vehiclesInvolved, setVehiclesInvolved] = useState('1');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [location, setLocation] = useState({
+    lat: parseFloat(params.lat) || null,
+    lng: parseFloat(params.lng) || null
+  });
 
   const handleSubmit = async () => {
+    if (!location.lat || !location.lng) {
+      Alert.alert('Error', 'Location data is missing');
+      return;
+    }
     setIsSubmitting(true);
     const reportData = {
       severity,
       casualties,
       accidentType,
       vehiclesInvolved,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      // Add location data
+      location: {
+        latitude: location.lat,
+        longitude: location.lng
+      }
     };
 
   //   // Simulate API call

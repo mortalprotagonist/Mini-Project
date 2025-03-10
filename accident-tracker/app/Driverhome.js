@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, Alert } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
+import { collection, query, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
 // Your Google Maps API key - Replace this with your actual API key in your project
 const GOOGLE_MAPS_API_KEY = 'AIzaSyArOVvcN9yNxBj8R_1fDf7ptyMnJNOZ6c8';
@@ -17,8 +19,20 @@ const HomeScreen = () => {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  const [accidentReports, setAccidentReports] = useState([]);
 
   useEffect(() => {
+    const q = query(collection(db, "accidentReports"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const reports = [];
+      querySnapshot.forEach((doc) => {
+        reports.push({ id: doc.id, ...doc.data() });
+      });
+      setAccidentReports(reports);
+    });
+
+     // Cleanup on unmount
+  
     (async () => {
       try {
         // Request location permissions
@@ -47,6 +61,7 @@ const HomeScreen = () => {
         setErrorMsg('Error getting location: ' + error.message);
       }
     })();
+    return () => unsubscribe();
   }, []);
 
   const toggleOnlineStatus = () => {
@@ -95,6 +110,29 @@ const HomeScreen = () => {
                 description="Your current location"
               />
             )}
+            {accidentReports.map((report) => (
+          <Marker
+            key={report.id}
+            coordinate={{
+              latitude: report.location?.latitude,
+              longitude: report.location?.longitude,
+            }}
+            pinColor="blue"
+          >
+            <Callout tooltip>
+              <View style={styles.calloutContainer}>
+                <Text style={styles.calloutTitle}>Accident Details</Text>
+                <Text>Severity: {report.severity}</Text>
+                <Text>Type: {report.accidentType}</Text>
+                <Text>Vehicles: {report.vehiclesInvolved}</Text>
+                <Text>Casualties: {report.casualties}</Text>
+                <Text style={styles.timestamp}>
+                  {new Date(report.timestamp).toLocaleString()}
+                </Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))}
           </MapView>
         </View>
       )}
@@ -193,6 +231,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
+  calloutContainer: {
+    width: 200,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 6,
+  },
+  calloutTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#e53935',
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 5,
+  }
 });
 
 export default HomeScreen;
