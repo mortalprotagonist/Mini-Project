@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, ActivityIn
 import { Picker } from '@react-native-picker/picker';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
 export default function ReportScreen() {
   const [severity, setSeverity] = useState('Critical');
@@ -11,7 +13,7 @@ export default function ReportScreen() {
   const [vehiclesInvolved, setVehiclesInvolved] = useState('1');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
     const reportData = {
       severity,
@@ -21,14 +23,27 @@ export default function ReportScreen() {
       timestamp: new Date().toISOString()
     };
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Submitted:', reportData);
-      setIsSubmitting(false);
-      Alert.alert('Success', 'Accident report submitted successfully');
-      router.back();
-    }, 1500);
-  };
+  //   // Simulate API call
+  //   setTimeout(() => {
+  //     console.log('Submitted:', reportData);
+  //     setIsSubmitting(false);
+  //     Alert.alert('Success', 'Accident report submitted successfully');
+  //     router.back();
+  //   }, 1500);
+  // };
+  try {
+    // Store the report data in a Firestore collection called 'accidentReports'
+    const docRef = await addDoc(collection(db, "accidentReports"), reportData);
+    console.log("Document written with ID:", docRef.id);
+    Alert.alert('Success', 'Accident report submitted successfully');
+    router.back();
+  } catch (error) {
+    console.error("Error adding document:", error);
+    Alert.alert('Error', 'There was an error submitting your report');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
