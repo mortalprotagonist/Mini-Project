@@ -14,19 +14,15 @@ export default function SplashScreen() {
       router.replace('/first');
     });
   }, []);
-
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
         <Text style={styles.title}>Accident & Emergency Tracker</Text>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-        />
-        
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
       </Animated.View>
-    /</View>
+    </View>
   );
+  
 }
 
 const styles = StyleSheet.create({
