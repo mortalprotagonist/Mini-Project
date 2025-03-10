@@ -5,9 +5,11 @@ import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import {GOOGLE_MAPS_API_KEY} from '@env';
+
 
 // Your Google Maps API key - Replace this with your actual API key in your project
-const GOOGLE_MAPS_API_KEY = 'AIzaSyArOVvcN9yNxBj8R_1fDf7ptyMnJNOZ6c8';
+const GOOGLE_MAPS_API_KEYS = GOOGLE_MAPS_API_KEY;
 
 const HomeScreen = () => {
   const [isOnline, setIsOnline] = useState(false);
@@ -98,7 +100,7 @@ const HomeScreen = () => {
             region={region}
             showsUserLocation={true}
             showsMyLocationButton={true}
-            apiKey={GOOGLE_MAPS_API_KEY} // Adding API key directly to the MapView component
+            apiKey={GOOGLE_MAPS_API_KEYS} // Adding API key directly to the MapView component
           >
             {location && (
               <Marker
