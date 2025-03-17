@@ -4,10 +4,7 @@ import MapView, { Polyline, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 // Coordinates for Munroe Island, Kollam
-const MUNROE_ISLAND_COORDS = {
-    latitude: 8.8932,   // Approximate
-    longitude: 76.6141
-};
+
 
 export default function NavigationScreen() {
   const [userLocation, setUserLocation] = useState(null);
