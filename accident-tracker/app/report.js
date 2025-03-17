@@ -35,7 +35,8 @@ export default function ReportScreen() {
       location: {
         latitude: location.lat,
         longitude: location.lng
-      }
+      },
+      status: 'Unattended'
     };
 
   //   // Simulate API call
@@ -125,6 +126,7 @@ export default function ReportScreen() {
               dropdownIconColor="#e53935"
             >
               <Picker.Item label="Bus Accident" value="Bus" />
+              <Picker.Item label="Plane Accident" value="Plane" />
               <Picker.Item label="Car Collision" value="Car" />
               <Picker.Item label="Motorcycle Crash" value="Bike" />
               <Picker.Item label="Heavy Vehicle Incident" value="Transport Heavy Vehicle" />
