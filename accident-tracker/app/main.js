@@ -63,7 +63,7 @@ export default function MainScreen() {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.infoButton}
-          onPress={() => router.push('/guide')}
+          onPress={() => router.push('/Safety/guide')}
         >
           <Text style={styles.buttonText}>Safety Guide</Text>
         </TouchableOpacity>
